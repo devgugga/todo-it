@@ -15,7 +15,6 @@ type Client interface {
 	GetCollection(name string) *mongo.Collection
 	Close() error
 	Health() error
-	CreateIndexes(ctx context.Context) error
 }
 
 type MongoDB struct {
@@ -132,18 +131,4 @@ func (m *MongoDB) Health() error {
 	defer cancel()
 
 	return m.client.Ping(ctx, nil)
-}
-
-func (m *MongoDB) CreateIndexes(ctx context.Context) error {
-	m.mu.Lock()
-	defer m.mu.Unlock()
-
-	if m.closed {
-		return fmt.Errorf("conexão MongoDB está fechada")
-	}
-
-	// TODO: Adicionar futuros indices
-
-	log.Println("📊 Todos os índices foram criados com sucesso!")
-	return nil
 }
